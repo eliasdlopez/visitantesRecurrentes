@@ -21,9 +21,9 @@ app.get('/', async (req, res) => {
   var name = req.query.name;
 
   //// CHECK IF VISITOR EXISTS
+
   var oldVisitor = await Visitor.find({ name: name });
 
-  // console.log(oldVisitor);
   //// IF VISITOR DOESN'T EXIST, CREATE NEW ONE AND SAVE
 
     if (!oldVisitor.length) {
@@ -54,7 +54,9 @@ app.get('/', async (req, res) => {
             return res.send(`error`);
           }
         });
+
 // INCREASE COUNT IF IT EXISTS
+
   } else {
     console.log('funcionó');
     Visitor.updateOne({ name: name }, { $inc: {count: 1} }, console.log);
@@ -62,7 +64,7 @@ app.get('/', async (req, res) => {
   };
 
 
-  //// Hasta acá está bien
+  //// CREATE TABLE
 
   Visitor.find(function(err, table) {
 
@@ -76,9 +78,9 @@ app.get('/', async (req, res) => {
                    '<td>'+item.count+'</td></tr>' );
       });
       let result = ('<table><thead><tr>'+
-                      '<th class="text-center">'+"Id"+'</th>'+
-                      '<th class="text-center">'+"Name"+'</th>'+
-                      '<th class="text-center">'+"Visits"+'</th>'+
+                      '<td class="text-center">'+"Id"+'</td>'+
+                      '<td class="text-center">'+"Name"+'</td>'+
+                      '<td class="text-center">'+"Visits"+'</td>'+
                  '</tr></thead><tbody>'+tr+'</tbody></table>');
 
       return res.send(result);
