@@ -14,6 +14,7 @@ const VisitantesSchema = mongoose.Schema({
   name: String,
   count: Number
 });
+
 //// CREATE TABLE STATIC METHOD
 VisitantesSchema.statics.createTable = async function() {
 
@@ -32,8 +33,6 @@ VisitantesSchema.statics.createTable = async function() {
           '<td class="text-center">Name</td>'+
           '<td class="text-center">Visits</td>'+
           '</tr></thead><tbody>'+tr+'</tbody></table>');
-
-
 };
 
 //// MODEL
@@ -50,15 +49,16 @@ app.get('/', async (req, res) => {
 
   //// CHECK IF VISITOR EXISTS
 
-  var oldVisitor = await Visitor.find({ name });
+  var oldVisitor = await Visitor.find({ name, });
 
 //// IF VISITOR DOESN'T EXIST, CREATE NEW ONE AND SAVE
 
-    if (!oldVisitor.length) {
+if (!name) {
+      name = 'Anónimo';
 
-        const person = new Visitor ({
+      const person = new Visitor ({
         name,
-        count: 1,
+        count: 1
       });
 
       await person.save();
@@ -66,21 +66,20 @@ app.get('/', async (req, res) => {
 
 //// IF ANONYMOUS CREATE NEW
 
-  } else if (!name) {
-        name = 'Anónimo';
 
-        const person = new Visitor ({
-          name,
-          count: 1,
-        });
+} else if (!oldVisitor.length) {
 
-        await person.save();
+  const person = new Visitor ({
+  name,
+  count: 1
+});
 
+await person.save();
 
 // INCREASE COUNT IF IT EXISTS
 
   } else {
-    await Visitor.updateOne({ name }, { $inc: {count: 1} });
+    await Visitor.updateOne({ name, }, { $inc: {count: 1} });
   };
 
   const table = await Visitor.createTable();
